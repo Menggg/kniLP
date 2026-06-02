@@ -1,0 +1,144 @@
+# KinLP example project config
+#
+# Usage:
+#   bash main.sh --config example_config.txt doctor
+#   bash main.sh --config example_config.txt doctor lowpass
+#   bash main.sh --config example_config.txt snps
+#   bash main.sh --config example_config.txt simulate
+#   bash main.sh --config example_config.txt kinship
+#   bash main.sh --config example_config.txt lowpass-merge 1
+#   bash main.sh --config example_config.txt evaluate
+#
+# Notes:
+#   1. Replace all paths under /path/to/... with your own files.
+#   2. Relative paths are resolved from the directory where you run main.sh.
+#   3. Do not upload large reference panels or private sequencing data to GitHub.
+
+########################################
+# Project
+########################################
+PROJECT_NAME=demo_3cousin
+
+# Root directory of your KinLP project or analysis project
+PROJECT_DIR=/path/to/KinLP_demo
+
+OUT_DIR=/path/to/KinLP_demo/results
+TMP_DIR=/path/to/KinLP_demo/tmp
+LOG_DIR=/path/to/KinLP_demo/logs
+
+########################################
+# User input data
+########################################
+
+# Phased founder VCF used by Ped-Sim.
+# This VCF should contain founder samples and should be compatible with the Ped-Sim map.
+FOUNDER_VCF=/path/to/data/merged_phased_highpass_founders.vcf.gz
+
+# Optional high-pass VCF used by the phasing/preparation module.
+HIGH_PASS_VCF=/path/to/data/highpass_samples.vcf.gz
+
+# SNP panel or marker list, for example GSA/Omni intersection markers.
+SNP_PANEL_LIST=/path/to/data/snp_panel_hg38.list
+
+########################################
+# Kinship / IBIS input
+########################################
+
+# Input for the standalone kinship module.
+# Supported input types: VCF, BCF, or PLINK prefix.
+IBIS_INPUT=/path/to/KinLP_demo/results/cousin_d3.pedsim.vcf.gz
+
+# Output prefix for kinship module.
+IBIS_OUT_PREFIX=/path/to/KinLP_demo/results/kinship/cousin_d3_ibisOut
+
+########################################
+# SNP filtering
+########################################
+
+# GP/BF thresholds for imputed low-pass VCF marker filtering.
+# For high-pass VCFs without GP/RAF fields, use a marker-only workflow or set
+# thresholds according to the SNP selection script options.
+SNP_GP=0.99
+SNP_BF=50
+
+# SNP ID output style. Common choices: chr or id
+SNP_ID_STYLE=chr
+
+# Sample mode for GP/BF filtering.
+SNP_SAMPLE_MODE=any
+
+########################################
+# Simulation defaults
+########################################
+
+DEFAULT_RELATIONSHIP=cousin
+DEFAULT_DEGREE=3
+DEFAULT_HALF=0
+DEFAULT_COPIES=1
+DEFAULT_SEED=42
+
+########################################
+# Low-pass merge
+########################################
+
+# Directory containing high-pass PLINK files for simulated samples.
+SIM_DIR=/path/to/KinLP_demo/simulation_3cousin
+
+# Must expand to:
+#   sim_highPass_GSA_1.bed
+#   sim_highPass_GSA_1.bim
+#   sim_highPass_GSA_1.fam
+# when running:
+#   bash main.sh --config example_config.txt lowpass-merge 1
+HIGHPASS_PREFIX_TEMPLATE=/path/to/KinLP_demo/simulation_3cousin/sim_highPass_GSA_{n}
+
+# List of low-pass genotype files.
+# Supported rows:
+#   /path/to/file.vcf.gz
+# or:
+#   label    /path/to/file.vcf.gz
+GENOTYPE_FILE_LIST=/path/to/KinLP_demo/configs/lowpass_genotype_files.list
+
+# List of SNP keep files.
+# Supported rows:
+#   /path/to/snps.keep
+# or:
+#   label    /path/to/snps.keep
+SNP_KEEP_FILE_LIST=/path/to/KinLP_demo/configs/snp_keep_files.list
+
+########################################
+# IBIS map and helper script
+########################################
+
+# Optional if these paths are already resolved by TOOL_ROOT/resources.
+IBIS_ADD_MAP=/path/to/KinLP/bin/add-map-plink.pl
+IBIS_MAP_FILE=/path/to/KinLP/resources/genetic_map_GRCh38_merged.tab
+MAP_FILE=/path/to/KinLP/resources/genetic_map_GRCh38_merged.tab
+
+########################################
+# Parallel
+########################################
+
+PARALLEL_WORKFLOW=lowpass-merge
+PARALLEL_ARRAY=1-10
+LOCAL_JOBS=4
+
+SLURM_CPUS=4
+SLURM_MEM=40G
+SLURM_TIME=08:00:00
+
+########################################
+# Evaluate IBIS results
+########################################
+
+# Both truth and pred must be explicitly specified.
+# Supported source types:
+#   kinship
+#   lowpass-merge
+EVAL_TRUTH_TYPE=kinship
+EVAL_TRUTH=/path/to/KinLP_demo/results/kinship_truth
+
+EVAL_PRED_TYPE=lowpass-merge
+EVAL_PRED=/path/to/KinLP_demo/results/lowpass_merge
+
+EVAL_OUT_PREFIX=/path/to/KinLP_demo/results/evaluate/run1
