@@ -1,0 +1,156 @@
+# ==========================================================
+# mix_detect : lowpass-merge config
+# ==========================================================
+#
+# Purpose:
+#   Run lowpass-merge module through main.sh.
+#
+# Command:
+#   bash main.sh --config lowpass_merge.cousin_d3.txt lowpass-merge 1
+#
+# Notes:
+#   - The final argument "1" is the simulation id used to resolve
+#     HIGHPASS_PREFIX_TEMPLATE.
+#   - This module processes multiple low-pass genotype inputs listed in
+#     GENOTYPE_FILE_LIST.
+#   - For each unit:
+#       high-pass PLINK prefix
+#          +
+#       low-pass / imputed genotype input
+#          ↓
+#       PLINK merge
+#          ↓
+#       IBIS
+# ==========================================================
+
+########################################
+# Project
+########################################
+PROJECT_NAME=test_3cousin
+PROJECT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+OUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+TMP_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp
+LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs
+OUTPUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+
+########################################
+# Tool paths
+########################################
+TOOL_ROOT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+BIN_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin
+RESOURCE_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources
+
+LOWPASS_IBIS_FUNCTIONS=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/lowpass_ibis_functions.sh
+
+PLINK=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/plink
+PLINK2=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/plink2
+IBIS_PLINK2=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/plink2
+IBIS_BIN=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/ibis
+IBIS_ADD_MAP=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/add-map-plink.pl
+
+########################################
+# Genetic map for IBIS
+########################################
+IBIS_MAP_FILE=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources/genetic_map_GRCh38_merged.tab
+
+########################################
+# High-pass PLINK prefix template
+########################################
+# The lowpass-merge command receives a simulation id, e.g.:
+#   bash main.sh --config lowpass_merge.cousin_d3.txt lowpass-merge 1
+#
+# Then {n} is replaced by 1.
+#
+# Example resolved prefix:
+#   /.../results/highpass/sim_1/highpass
+#
+# This prefix must have:
+#   .bed .bim .fam
+HIGHPASS_PREFIX_TEMPLATE=/eva/home/meng/WGS_sim/simulation_3cousin/sim_highPass_GSA_{n}
+
+########################################
+# Low-pass / imputed genotype input list
+########################################
+# Required.
+#
+# Format:
+#   Either one column:
+#     /path/to/lowpass1.vcf.gz
+#     /path/to/lowpass2.vcf.gz
+#
+#   Or two columns:
+#     unit_label_1   /path/to/lowpass1.vcf.gz
+#     unit_label_2   /path/to/lowpass2.vcf.gz
+#
+# Supported input per row:
+#   - VCF / VCF.GZ
+#   - BCF
+#   - PLINK prefix
+GENOTYPE_FILE_LIST=/tmp/meng/imp_file.list
+
+########################################
+# SNP keep/extract files
+########################################
+# Option A:
+#   Use one common SNP list for all units:
+OVERLAP_SNP=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results/snps.GP099_BF50.chr.txt
+
+# Option B:
+#   Use per-unit SNP keep list file.
+#   Leave empty unless you have one row per genotype unit.
+#
+# Format:
+#   Either one column:
+#     /path/to/snps1.txt
+#     /path/to/snps2.txt
+#
+#   Or two columns:
+#     unit_label_1   /path/to/snps1.txt
+#     unit_label_2   /path/to/snps2.txt
+SNP_KEEP_FILE_LIST=
+
+########################################
+# Optional sample filter
+########################################
+# PLINK keep file for high-pass side.
+# Leave empty to keep all samples.
+INCLUDE_FAM=
+
+########################################
+# Output collection
+########################################
+RUN_TAG=lowpass_merge
+RUN_ID=cousin_d3_sim_{n}
+
+LOWPASS_COLLECTION_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results/lowpass_merge/cousin_d3_sim_{n}
+LOWPASS_WORK_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp/lowpass_merge/cousin_d3_sim_{n}
+LOWPASS_LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs/lowpass_merge/cousin_d3_sim_{n}
+
+# Usually auto-generated from LOWPASS_COLLECTION_DIR.
+LOWPASS_UNIT_MANIFEST=
+LOWPASS_STATUS_DIR=
+
+########################################
+# Failure behavior
+########################################
+# 1 = continue if one unit fails
+# 0 = stop immediately on first failed unit
+LOWPASS_CONTINUE_ON_FAIL=1
+
+########################################
+# IBIS parameters used after each merge
+########################################
+IBIS_THREADS=8
+IBIS_MIN_L=7
+IBIS_MT=500
+IBIS_ER=0.004
+
+# Add genetic map into BIM before IBIS.
+IBIS_ADD_MAP_ENABLED=1
+
+# Usually do not change.
+IBIS_SET_ALL_VAR_IDS=
+IBIS_SEG_LENGTH_COL=9
+IBIS_SEG_EXPECTED_NCOL=9
+IBIS_COEF_EXPECTED_NCOL=2
+IBIS_COEF_HEADER_PATTERN=Individual1

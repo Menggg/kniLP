@@ -1,0 +1,36 @@
+# ==========================================================
+# mix_detect : SNP filtering only
+# ==========================================================
+#
+# Usage:
+#   bash main.sh --config snps.GP099_BF50.clean.txt snps
+#
+# Purpose:
+#   Generate SNP keep list using GP/BF thresholds and SNP panel intersection.
+#   This config is standalone for the snps module only.
+# ==========================================================
+
+########################################
+# Project paths
+########################################
+PROJECT_NAME=test_3cousin
+PROJECT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+OUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+TMP_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp
+LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs
+
+########################################
+# SNP filtering input/output
+########################################
+SNP_INPUT=/tmp/meng/2023-036-A-3-vii.la.md.bqsr.merged.md.sfilt.autos.glimpse2.vcf.gz
+SNP_PANEL_LIST=/eva/home/meng/WGS_sim/GSA_hg38_snp_ID2.list
+SNP_OUT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results/snps.GP099_BF50.chr.txt
+
+########################################
+# SNP filtering parameters
+########################################
+SNP_GP=0.99
+SNP_BF=50
+SNP_ID_STYLE=chr
+SNP_SAMPLE_MODE=any
+SNP_MERGE_MODE=intersect

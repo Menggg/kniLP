@@ -1,0 +1,39 @@
+# ==========================================================
+# mix_detect : Parallel low-pass merge
+# ==========================================================
+#
+# Run low-pass merge over an array locally or through Slurm.
+#
+# Commands:
+#   bash main.sh --config configs/parallel.lowpass_merge.txt parallel local
+#   bash main.sh --config configs/parallel.lowpass_merge.txt parallel slurm
+#   bash main.sh --config configs/parallel.lowpass_merge.txt parallel status
+#
+# This file is standalone: no second config file is required.
+# ==========================================================
+PROJECT_NAME=test_3cousin
+PROJECT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+OUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+TMP_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp
+LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs
+
+
+# Must expand to highPass_sim_1.bed/.bim/.fam for lowpass-merge 1
+HIGHPASS_PREFIX_TEMPLATE=/eva/home/meng/WGS_sim/simulation_3cousin/sim_highPass_GSA_{n}
+
+GENOTYPE_FILE_LIST=/tmp/meng/imp_file.list
+SNP_KEEP_FILE_LIST=/tmp/meng/snp_keep_file.list
+
+# Optional
+IBIS_ADD_MAP=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/add-map-plink.pl
+IBIS_MAP_FILE=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources/genetic_map_GRCh38_merged.tab
+MAP_FILE=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources/genetic_map_GRCh38_merged.tab
+
+
+INCLUDE=lowpass_merge.cousin_d3.txt
+PARALLEL_WORKFLOW=lowpass-merge
+PARALLEL_ARRAY=1-10
+LOCAL_JOBS=4
+SLURM_CPUS=4
+SLURM_MEM=40G
+SLURM_TIME=08:00:00

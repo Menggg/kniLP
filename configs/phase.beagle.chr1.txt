@@ -1,0 +1,82 @@
+# ==========================================================
+# mix_detect : Beagle phasing config
+# ==========================================================
+#
+# Reference command used:
+#   java -Xmx50g -jar /eva/home/meng/WGS_sim/beagle.29Oct24.c8e.jar \
+#     ref=/eva/edatums/reference_materials/imputation/GnomadPanelV2/Panel/hgdp1kgp_chr"$chr".filtered.SNV_INDEL.phased.shapeit5.unrelateds.nopp.vcf.gz \
+#     map=plink.chr"$chr".GRCh38.map \
+#     impute=false \
+#     gt=chr"$chr"_highPass.vcf.gz \
+#     out=phased_chr"$chr"_highPass
+#
+# Run:
+#   bash main.sh --config phase.beagle.gnomad.chr1.txt phase
+#
+# Change PHASE_CHR=1 to another chromosome, or use parallel phase for chr1-22.
+# ==========================================================
+
+########################################
+# Project
+########################################
+PROJECT_NAME=test_3cousin
+PROJECT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+OUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+TMP_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp
+LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs
+
+########################################
+# Tool paths
+########################################
+TOOL_ROOT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+BIN_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin
+RESOURCE_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources
+
+PLINK2=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/plink2
+BEAGLE_JAR=/eva/home/meng/WGS_sim/beagle.29Oct24.c8e.jar
+
+# main.sh calls this wrapper for phase
+
+########################################
+# Phasing input
+########################################
+# main.sh passes this as --phase-input-vcf.
+# The wrapper should create/use per-chromosome gt like:
+#   chr${PHASE_CHR}_highPass.vcf.gz
+HIGH_PASS_VCF=/eva/home/meng/WGS_sim/highPass_8miseqSample.vcf.gz
+
+# Marker list used before phasing.
+SNP_PANEL_LIST=/eva/home/meng/WGS_sim/GSA_hg38_snp_ID2.list
+
+########################################
+# Beagle phasing settings
+########################################
+PHASE_CHR=1
+PHASE_XMX=50g
+THREADS=4
+
+# Beagle reference panel:
+# expands to:
+#   /eva/edatums/reference_materials/imputation/GnomadPanelV2/Panel/hgdp1kgp_chr1.filtered.SNV_INDEL.phased.shapeit5.unrelateds.nopp.vcf.gz
+PHASE_REF_TEMPLATE=/eva/edatums/reference_materials/imputation/GnomadPanelV2/Panel/hgdp1kgp_chr{chr}.filtered.SNV_INDEL.phased.shapeit5.unrelateds.nopp.vcf.gz
+
+# Beagle genetic map:
+# expands to:
+#   plink.chr1.GRCh38.map
+# If you run from another directory, change this to an absolute path.
+PHASE_MAP_TEMPLATE=/eva/home/meng/WGS_sim/plink.chr{chr}.GRCh38.map
+
+# Beagle option:
+PHASE_IMPUTE=false
+
+########################################
+# Output naming intent
+########################################
+# Expected Beagle-style output prefix:
+#   phased_chr${PHASE_CHR}_highPass
+#
+# Actual output location/prefix may be controlled inside PEDSIM_SCRIPT.
+# If the wrapper supports an explicit phase output prefix variable later,
+# set it to:
+#   PHASE_OUT_PREFIX=phased_chr{chr}_highPass
+########################################

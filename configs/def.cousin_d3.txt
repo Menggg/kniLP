@@ -1,0 +1,66 @@
+# ==========================================================
+# mix_detect : Ped-Sim DEF generation only
+# ==========================================================
+#
+# Purpose:
+#   Generate Ped-Sim .def file only.
+#
+# Command:
+#   bash main.sh --config def.cousin_d3.txt def
+#
+# This config does NOT run:
+#   - Beagle phasing
+#   - Ped-Sim simulation
+#   - SNP filtering
+#   - IBIS kinship
+# ==========================================================
+
+########################################
+# Project
+########################################
+PROJECT_NAME=test_3cousin
+PROJECT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+OUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+TMP_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp
+LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs
+
+########################################
+# Tool paths
+########################################
+TOOL_ROOT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+
+# Important:
+# main.sh def calls PEDSIM_SCRIPT.
+# Use the current renamed wrapper.
+PEDSIM_SCRIPT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/run_make_def.sh
+
+########################################
+# DEF design
+########################################
+SIM_RELATIONSHIP=cousin
+SIM_DEGREE=3
+SIM_HALF=0
+SIM_COPIES=1
+SIM_DEF_NAME=cousin_d3
+
+# For full 3rd cousin:
+# founders_per_copy = 2 + 2*d = 8
+# With SIM_COPIES=1, at least 8 founders are required.
+# main.sh currently does not pass N_FOUNDERS directly,
+# so either provide FOUNDER_VCF or pass --n-founders at runtime.
+FOUNDER_VCF=/eva/home/meng/WGS_sim/merged_phased_highPass.vcf.gz
+
+########################################
+# Optional output behavior
+########################################
+# Default output:
+#   $OUT_DIR/cousin_d3.def
+#
+# To print all generations with founders, add at runtime:
+#   --print-all-with-founders
+#
+# To print all simulated non-founder generations:
+#   --print-all-simulated
+#
+# To generate family plot:
+#   --plot-family

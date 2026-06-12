@@ -1,0 +1,87 @@
+# mix_detect project config
+# Usage:
+#   bash main.sh --config example_config.txt doctor
+#   bash main.sh --config example_config.txt doctor lowpass
+#   bash main.sh --config example_config.txt lowpass-merge 1
+
+########################################
+# Project
+########################################
+PROJECT_NAME=test_3cousin
+PROJECT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+OUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+TMP_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp
+LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs
+
+########################################
+# User input data
+########################################
+FOUNDER_VCF=/eva/home/meng/WGS_sim/merged_phased_highPass.vcf.gz
+HIGH_PASS_VCF=/eva/home/meng/WGS_sim/highPass_8miseqSample.vcf.gz
+SNP_PANEL_LIST=/eva/home/meng/WGS_sim/GSA_hg38_snp_ID2.list
+
+IBIS_INPUT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results/cousin_d3.pedsim.vcf.gz
+IBIS_OUT_PREFIX=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results/kinship/cousin_d3_ibisOut
+
+########################################
+# SNP filtering
+########################################
+# SNP filtering input
+SNP_INPUT=/tmp/meng/2023-036-A-3-vii.la.md.bqsr.merged.md.sfilt.autos.glimpse2.vcf.gz
+SNP_PANEL_LIST=/eva/home/meng/WGS_sim/GSA_hg38_snp_ID2.list
+# SNP filtering output
+SNP_OUT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results/snps.GP099_BF50.chr.txt
+
+SNP_GP=0.99
+SNP_BF=50
+SNP_ID_STYLE=chr
+SNP_SAMPLE_MODE=any
+SNP_MERGE_MODE=intersect
+
+########################################
+# Simulation defaults
+########################################
+DEFAULT_RELATIONSHIP=cousin
+DEFAULT_DEGREE=3
+DEFAULT_HALF=0
+DEFAULT_COPIES=1
+DEFAULT_SEED=42
+
+########################################
+# Low-pass merge
+########################################
+SIM_DIR=/eva/home/meng/WGS_sim/simulation_3cousin
+
+# Must expand to highPass_sim_1.bed/.bim/.fam for lowpass-merge 1
+HIGHPASS_PREFIX_TEMPLATE=/eva/home/meng/WGS_sim/simulation_3cousin/sim_highPass_GSA_{n}
+
+GENOTYPE_FILE_LIST=/tmp/meng/imp_file.list
+SNP_KEEP_FILE_LIST=/tmp/meng/snp_keep_file.list
+
+# Optional
+IBIS_ADD_MAP=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/add-map-plink.pl
+IBIS_MAP_FILE=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources/genetic_map_GRCh38_merged.tab
+MAP_FILE=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources/genetic_map_GRCh38_merged.tab
+
+########################################
+# Parallel
+########################################
+PARALLEL_WORKFLOW=lowpass-merge
+PARALLEL_ARRAY=1-10
+LOCAL_JOBS=4
+SLURM_CPUS=4
+SLURM_MEM=40G
+SLURM_TIME=08:00:00
+
+
+########################################
+# Evaluate IBIS results
+########################################
+EVAL_TRUTH_TYPE=kinship
+EVAL_TRUTH=results/
+EVAL_PRED_TYPE=lowpass-merge
+EVAL_PRED=results/lowpass_merge
+EVAL_OUT_PREFIX=results/evaluate/run1
+
+
+

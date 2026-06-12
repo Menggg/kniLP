@@ -1,0 +1,81 @@
+# ==========================================================
+# mix_detect : Ped-Sim simulation
+# ==========================================================
+#
+# Purpose:
+#   Generate Ped-Sim .def and run Ped-Sim simulation.
+#
+# Command:
+#   bash main.sh --config simulate.cousin_d3.txt simulate
+#
+# This config does NOT run:
+#   - Beagle phasing
+#   - SNP filtering
+#   - IBIS kinship
+#   - lowpass-merge
+# ==========================================================
+
+########################################
+# Project
+########################################
+PROJECT_NAME=test_3cousin
+PROJECT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+OUT_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/results
+TMP_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/tmp
+LOG_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/logs
+
+########################################
+# Tool paths
+########################################
+TOOL_ROOT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code
+BIN_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin
+RESOURCE_DIR=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources
+
+# main.sh simulate calls PEDSIM_SCRIPT.
+PEDSIM_SCRIPT=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/run_make_def.sh
+
+PEDSIM_BIN=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/bin/ped-sim
+
+########################################
+# Ped-Sim input founder VCF
+########################################
+# Usually this should be phased founder/high-pass VCF.
+# If you already generated Beagle phased output, replace this with that phased VCF.
+FOUNDER_VCF=/eva/home/meng/WGS_sim/merged_phased_highPass.vcf.gz
+
+########################################
+# Ped-Sim map / crossover model
+########################################
+PEDSIM_MAP=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources/refined_mf_hg38_noCHR.simmap
+PEDSIM_INTF=/eva/home/meng/WGS_sim/LOWPASS_toolbox_paper_code/resources/sex_av_nu_p_hg38_campbell_noCHR.tsv
+
+# Leave empty unless using fixed crossover model.
+PEDSIM_FIXED_CO=
+
+########################################
+# Simulation design
+########################################
+SIM_RELATIONSHIP=cousin
+SIM_DEGREE=3
+SIM_HALF=0
+SIM_COPIES=1
+SIM_DEF_NAME=cousin_d3
+SIM_SEED=42
+
+########################################
+# Ped-Sim output behavior
+########################################
+# main.sh passes --run-pedsim automatically for simulate.
+# Default Ped-Sim output prefix is derived from the .def path by run_make_def.sh.
+#
+# Optional: if your wrapper supports --pedsim-out-prefix via runtime option,
+# you can pass it manually:
+#   bash main.sh --config simulate.cousin_d3.txt simulate --pedsim-out-prefix results/simulation/cousin_d3
+#
+# Optional useful runtime flags:
+#   --print-all-with-founders
+#   --plot-family
+#   --pedsim-fam
+#   --pedsim-bp
+#   --pedsim-mrca
+#   --pedsim-founder-ids
